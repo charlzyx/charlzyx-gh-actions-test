@@ -23,35 +23,31 @@ jobs:
           # 获取标签名称
           tag_name="${GITHUB_REF:10}"
 
-          # 提取功能模块名称
-          module_name=$(echo $tag_name | cut -d'/' -f1)
-
-          # 提取版本号
-          version=$(echo $tag_name | cut -d'/' -f2)
-
           tag="latest"
           pre_release=false
           # 检查是否预发布
           if [[ $tag_name == *"alpha"* ]]; then
             tag="alpha"
-            pre_release=true
           fi
 
           if [[ $tag_name == *"beta"* ]]; then
             tag="beta"
-            pre_release=true
           fi
 
-          echo "::set-output name=pre_release::$pre_release"
-          echo "::set-output name=module_name::$module_name"
-          echo "::set-output name=tag_name::$tag_name"
-          echo "::set-output name=version::$version"
+          echo "::set-output name=version::$tag_name"
           echo "::set-output name=tag::$tag"
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: |
+          # 更新 package.json 文件中的版本号
+          sed -i "s/\"version\": \".*\"/\"version\": \"${{steps.parse_tag.outputs.version}}\"/" package.json
           npm publish --access=public --tag ${{steps.parse_tag.outputs.tag}}
+          git config --global user.email "charlzyx@qq.com"
+          git config --global user.name "charlzyx"
+          git add .
+          git commit -m '🎉 release ${{steps.parse_tag.outputs.version}}'
+          git push https://${{secrets.GITHUB_TOKEN}}@github.com/charlzyx/gh-actions-test.git
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_ACCESS_TOKEN}}
