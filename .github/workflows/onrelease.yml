@@ -45,7 +45,7 @@ jobs:
           sed -i "s/\"version\": \".*\"/\"version\": \"${{steps.parse_tag.outputs.version}}\"/" package.json
           npm publish --access=public --tag ${{steps.parse_tag.outputs.tag}}
           release_notes="${{ github.event.release.body }}"
-          cat $release_notes >> CHANGELOG.md
+          echo $release_notes >> CHANGELOG.md
           git config --global user.email "charlzyx@qq.com"
           git config --global user.name "charlzyx"
           git add .
