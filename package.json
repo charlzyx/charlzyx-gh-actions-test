@@ -1,6 +1,6 @@
 {
 	"name": "charlzyx-gh-actions-test",
-	"version": "v0.0.1-alpha.4",
+	"version": "v0.0.1-alpha.6",
 	"description": "",
 	"main": "index.js",
 	"files": ["index.js"],
