@@ -1,4 +1,4 @@
 module.exports = {
-	package: "gh-actions-test",
+	package: "charlzyx-gh-actions-test",
 	version: "1",
 };
